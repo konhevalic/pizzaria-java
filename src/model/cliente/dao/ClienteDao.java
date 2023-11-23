@@ -25,6 +25,7 @@ public class ClienteDao {
     private final String select = "select * from clientes";
     private final String update = "update clientes set nome=?, sobrenome=?, telefone=? WHERE nome=?";
     private final String delete = "delete from clientes WHERE nome=?";
+    private final String deletePedidos = "DELETE FROM todos_pedidos WHERE telefone_cliente = ?";
     private final String filter = "SELECT * FROM clientes WHERE nome LIKE ? AND sobrenome LIKE ? AND telefone LIKE ?";
     
      public ClienteDao(ConnectionFactory conFactory) {
@@ -37,13 +38,10 @@ public class ClienteDao {
              PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS);
             )
         {
-            // seta os valores
             stmtAdiciona.setString(1, cliente.getNome());
             stmtAdiciona.setString(2, cliente.getSobrenome());
             stmtAdiciona.setString(3, cliente.getTelefone());
-            // executa
             stmtAdiciona.execute();
-            //Seta o id do contato
             ResultSet rs = stmtAdiciona.getGeneratedKeys();
             rs.next();
             
@@ -52,16 +50,25 @@ public class ClienteDao {
         } 
     }
     
-    public void atualizar(Cliente cliente) throws SQLException{
-        try(Connection connection=connectionFactory.getConnection();
-            PreparedStatement stmtAtualiza = connection.prepareStatement(update);
-            ){
+    public void atualizar(Cliente cliente) throws SQLException {
+        try (Connection connection = connectionFactory.getConnection();
+             PreparedStatement stmtVerificaTelefone = connection.prepareStatement("SELECT COUNT(*) FROM clientes WHERE telefone = ?");
+             PreparedStatement stmtAtualiza = connection.prepareStatement(update);
+        ) {
+            stmtVerificaTelefone.setString(1, cliente.getTelefone());
+            ResultSet resultSet = stmtVerificaTelefone.executeQuery();
+            resultSet.next();
+            int count = resultSet.getInt(1);
+
+            if (count > 0) {
+                throw new SQLException("Já existe um cliente com o novo número de telefone.");
+            }
 
             stmtAtualiza.setString(1, cliente.getNome());
             stmtAtualiza.setString(2, cliente.getSobrenome());
             stmtAtualiza.setString(3, cliente.getTelefone());
             stmtAtualiza.setString(4, cliente.getNome());
-            
+
             int linhasAfetadas = stmtAtualiza.executeUpdate();
 
             if (linhasAfetadas > 0) {
@@ -69,8 +76,9 @@ public class ClienteDao {
             } else {
                 System.out.println("Nenhum cliente foi atualizado.");
             }
-        } 
+        }
     }
+
         
     public List<Cliente> getLista() throws SQLException{
         try (Connection connection=connectionFactory.getConnection();
@@ -83,7 +91,6 @@ public class ClienteDao {
                 String sobrenome = rs.getString("sobrenome");
                 String telefone = rs.getString("telefone");
                 
-                // adicionando o objeto à lista
                 clientes.add(new Cliente(nome,sobrenome,telefone));
             }
             
@@ -112,7 +119,6 @@ public class ClienteDao {
                 String nomeFiltrado= rs.getString("nome");
                 String sobrenomeFiltrado = rs.getString("sobrenome");
                 String telefoneFiltrado = rs.getString("telefone");
-                // adicionando o objeto à lista
                 clientes.add(new Cliente(nomeFiltrado,sobrenomeFiltrado,telefoneFiltrado));
             }
             
@@ -124,17 +130,25 @@ public class ClienteDao {
     
     public void excluir(Cliente cliente) throws SQLException {
         
+        
         try (Connection connection=connectionFactory.getConnection();
              PreparedStatement stmtExcluir = connection.prepareStatement(delete);
+             PreparedStatement stmtExcluirPedidos = connection.prepareStatement(deletePedidos)
             ){
+            
+            stmtExcluirPedidos.setString(1, cliente.getTelefone());
+            stmtExcluirPedidos.executeUpdate();
+            
             stmtExcluir.setString(1, cliente.getNome());
             stmtExcluir.executeUpdate();
+        } catch (Exception ex) {
+            System.out.println(ex + " oiiiii");
         }
     }
     
     public void exluirLista(List<Cliente> clientes) throws SQLException {
-        for(Cliente contato:clientes){
-            excluir(contato);
+        for(Cliente cliente:clientes){
+            excluir(cliente);
         }
     }
     

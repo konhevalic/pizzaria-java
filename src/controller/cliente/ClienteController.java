@@ -9,6 +9,8 @@ import model.cliente.Cliente;
 import model.cliente.dao.ClienteDao;
 import view.Pizzaria;
 
+import java.sql.SQLException;
+
 /**
  *
  * @author alan
@@ -32,26 +34,26 @@ public class ClienteController {
     public void cadastrarCliente() {
         try{
             Cliente cliente = view.getClienteFormulario();
-
+            
             if(cliente != null) {
                 modelClienteDao.inserir(cliente);
                 view.inserirClienteTabela(cliente);
             }
             
         } catch(Exception ex){
+            view.mostraMensagemTelefoneExistente();
         }
     }
     
     public void atualizarCliente() {
-        
-        try{
-            Cliente cliente = view.getClienteParaAtualizar();
-            
+        Cliente cliente = view.getClienteParaAtualizar();
+        try {
             modelClienteDao.atualizar(cliente);
             view.atualizarClienteTabela();
-
-        }catch(Exception ex){
-            
+            System.out.println("teste1");
+        } catch (SQLException ex) {
+            view.mostraMensagemTelefoneExistente();
+            System.out.println("teste2");
         }
     }
     
@@ -61,7 +63,6 @@ public class ClienteController {
             modelClienteDao.exluirLista(listaParaExcluir);
             view.excluirCliente();
         }catch(Exception ex){
-            
         }
     }
 

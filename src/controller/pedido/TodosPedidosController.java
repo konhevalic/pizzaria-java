@@ -22,16 +22,10 @@ import view.Pizzaria;
 public class TodosPedidosController {
     
     private final Pizzaria view;
-//    private final PedidosClienteDao pedidosClienteDao;
-//    private final SaborDao modelSaborDao;
-//    private final PrecoDao modelPrecoDao;
     private final TodosPedidosDao modelTodosPedidosDao;
     
         public TodosPedidosController(Pizzaria view, TodosPedidosDao modelTodosPedidosDao) {
         this.view = view;
-//        this.pedidosClienteDao = pedidosClienteDao;
-//        this.modelSaborDao = modelSaborDao;
-//        this.modelPrecoDao = modelPrecoDao;
         this.modelTodosPedidosDao = modelTodosPedidosDao;
         initController();
     }
@@ -60,7 +54,17 @@ public class TodosPedidosController {
         modelTodosPedidosDao.atualizarStatusPedido(pedido.getNumeroPedido(), pedido.getStatus().name());
         view.atualizarTodosPedidosTabela(modelTodosPedidosDao.getListaPedidos());
         
+    }
+    
+    public void mostraTodosPedidos() {
         
+        try{
+            view.limparClienteAtualizar();
+            List<Pedido> lista = this.modelTodosPedidosDao.getListaPedidos();
+            
+            view.mostraTodosPedidos(lista);
+        }catch(Exception ex){
+        }
     }
     
 }

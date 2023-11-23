@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.table.AbstractTableModel;
 import model.cliente.Cliente;
-import repositorio.RepositorioDados;
 
 /**
  *
@@ -54,7 +53,7 @@ public class ClienteTableModel extends AbstractTableModel {
     public void setValueAt(Object value, int row, int col) {
         Cliente cliente = clientes.get(row);
         switch (col) {
-            case 0 -> cliente.setNome((String) value); //if column 0 (code)
+            case 0 -> cliente.setNome((String) value);
             case 1 -> cliente.setSobrenome((String) value);
             case 2 -> cliente.setTelefone((String) value);
             default -> {
@@ -65,7 +64,7 @@ public class ClienteTableModel extends AbstractTableModel {
     
     public void adicionaCliente(Cliente cliente) {
         this.clientes.add(cliente);
-        this.fireTableRowsInserted(clientes.size()-1,clientes.size()-1);//update JTable
+        this.fireTableRowsInserted(clientes.size()-1,clientes.size()-1);
     }
 
     public Cliente getCliente(int linhaSelecionadaEditarCliente) {
@@ -112,23 +111,8 @@ public class ClienteTableModel extends AbstractTableModel {
         
         limpaTabela();
         
-        List<Cliente> clientesFiltrados;
+        List<Cliente> clientesFiltrados;  
         
-        if(!nome.isEmpty()) {
-            clientesFiltrados = RepositorioDados.listaClientes.stream()
-                    .filter(cliente -> cliente.getNome().equals(nome)).toList();
-        } else if(!telefone.isEmpty()) {
-            clientesFiltrados = RepositorioDados.listaClientes.stream()
-                .filter(cliente -> cliente.getTelefone().equals(telefone)).toList();
-        } else {
-            clientesFiltrados = RepositorioDados.listaClientes.stream()
-            .filter(cliente -> cliente.getSobrenome().equalsIgnoreCase(sobrenome)
-                    || cliente.getSobrenome().toLowerCase().contains(sobrenome.toLowerCase()))
-            .collect(Collectors.toList());
-        }
-               
-
-        this.clientes.addAll(clientesFiltrados);
         this.fireTableRowsInserted(this.clientes.size()-1, this.clientes.size()-1);//update JTable
         
     }

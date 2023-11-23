@@ -41,7 +41,6 @@ public class TodosPedidosDao {
              PreparedStatement stmtAdiciona = connection.prepareStatement(insert)
         ) {
             for (Pedido pedido : pedidos) {
-                // Sete os valores
                 stmtAdiciona.setInt(1, pedido.getId());
                 stmtAdiciona.setString(2, pedido.getTelefoneCliente());
                 stmtAdiciona.setString(3, pedido.getSabor1());
@@ -52,7 +51,6 @@ public class TodosPedidosDao {
                 stmtAdiciona.setString(8, pedido.getStatus().name());
                 stmtAdiciona.setInt(9, pedido.getNumeroPedido());
 
-                // Execute a inserção
                 int affectedRows = stmtAdiciona.executeUpdate();
                 if (affectedRows == 0) {
                     throw new SQLException("A inserção falhou, nenhum registro foi criado.");
@@ -73,7 +71,6 @@ public class TodosPedidosDao {
             List<Pedido> pedidos = new ArrayList();
 
             while (rs.next()) {
-                // Substitua os nomes das colunas pelos nomes reais da tabela todos_pedidos
                 int id = rs.getInt("id");
                 String sabor1 = rs.getString("sabor1");
                 String sabor2 = rs.getString("sabor2");
@@ -84,10 +81,9 @@ public class TodosPedidosDao {
                 String nomeCliente = rs.getString("telefone_cliente");
                 int numeroPedidoFiltrado = rs.getInt("numero_pedido");
 
-                // adicionando o objeto à lista
                 Pizza pizza = new Pizza(sabor1, sabor2, formato, valorPizza);
                 Pedido pedido = new Pedido(pizza, nomeCliente, id, StatusPedido.valueOf(status), valorPedido, numeroPedidoFiltrado);
-                pedido.setId(id); // Certifique-se de ajustar o método setId na classe Pedido
+                pedido.setId(id);
                 pedidos.add(pedido);
             }
 
@@ -101,8 +97,7 @@ public class TodosPedidosDao {
         try (Connection connection = connectionFactory.getConnection();
              PreparedStatement stmtLista = connection.prepareStatement(filtraPedidosCliente)) {
 
-            stmtLista.setString(1, cliente.getTelefone());  // Substitua pelo método que retorna o telefone do cliente
-
+            stmtLista.setString(1, cliente.getTelefone()); 
             try (ResultSet rs = stmtLista.executeQuery()) {
                 List<Pedido> pedidos = new ArrayList<>();
                 while (rs.next()) {
@@ -117,7 +112,6 @@ public class TodosPedidosDao {
                     Pizza pizza = new Pizza(formato, sabor1, sabor2, preco);
                     String nomeCliente = cliente.getTelefone();
 
-                    // adicionando o objeto à lista
                     pedidos.add(new Pedido(pizza, nomeCliente, id, StatusPedido.valueOf(status), preco, numeroPedido));
                 }
                 
@@ -149,7 +143,6 @@ public class TodosPedidosDao {
                 Pizza pizza = new Pizza(sabor1, sabor2, formato, valorPizza);
                 Pedido pedido = new Pedido(pizza, telefoneCliente, id, StatusPedido.valueOf(status), valorPedido, numeroPedido);
 
-                // adicionando o objeto à lista
                 pedidos.add(pedido);
             }
 

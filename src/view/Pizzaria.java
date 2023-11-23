@@ -41,7 +41,6 @@ import model.preco.Preco;
 import model.preco.dao.PrecoDao;
 import model.sabor.Sabor;
 import model.sabor.dao.SaborDao;
-import repositorio.RepositorioDados;
 
 //alterar valor mockado unitario para multiplicacao com a area total
 /**
@@ -113,33 +112,6 @@ public class Pizzaria extends javax.swing.JFrame {
     public Pizzaria() throws SQLException {
         initComponents();
 
-//        areaPizzaInformada.setEnabled(false);
-
-//        Sabor sabor1 = new Sabor("Frango ", "Simples");
-//        Sabor sabor2 = new Sabor("4 Queijos", "Especial");
-//        Sabor sabor3 = new Sabor("Strogonoff", "Premium");
-//        saborTableModel.adicionaSabor(sabor1);
-//        saborTableModel.adicionaSabor(sabor2);
-//        saborTableModel.adicionaSabor(sabor3);
-
-//        RepositorioDados.listaSabores.add(sabor1);
-//        RepositorioDados.listaSabores.add(sabor2);
-//        RepositorioDados.listaSabores.add(sabor3);
-//        Preco preco1 = new Preco(10.0, "Simples");
-//        Preco preco2 = new Preco(20.0, "Especial");
-//        Preco preco3 = new Preco(30.0, "Premium");
-//        
-//        
-//        pizzas[0] = new Pizza("Simples", 10.0);
-//        pizzas[1] = new Pizza("Especial", 20.0);
-//        pizzas[2] = new Pizza("Premium", 30.0);
-//        
-//
-//        RepositorioDados.listaPrecos.add(pizzas[0]);
-//        RepositorioDados.listaPrecos.add(pizzas[1]);
-//        RepositorioDados.listaPrecos.add(pizzas[2]);
-//        precoTableModel.populaTabela();
-
         ClienteDao modelClienteDao = new ClienteDao(new ConnectionFactory());
         this.clienteTableModel.setListaCliente(modelClienteDao.getLista());
 
@@ -151,9 +123,7 @@ public class Pizzaria extends javax.swing.JFrame {
         
         TodosPedidosDao modelTodosPedidosDao = new TodosPedidosDao(new ConnectionFactory());
         this.todosPedidosTableModel.setListaTodosPedidos(modelTodosPedidosDao.getListaPedidos());
-        
-
-
+  
         jtClientes.setModel(clienteTableModel);
         jTabelaPrecos.setModel(precoTableModel);
         jTabelaSabores.setModel(saborTableModel);
@@ -162,21 +132,8 @@ public class Pizzaria extends javax.swing.JFrame {
         listaPizzasPedido.setModel(listaPizzas);
         jtPizzasPedidoAndamento.setModel(pedidosClienteTableModel);
 
-//        String[] nomesPizzas = Arrays.stream(pizzas)
-//                                     .map(Pizza::getCategoria)
-//                                     .toArray(String[]::new);
-//        
-//        tipo.setModel(new DefaultComboBoxModel<>(nomesPizzas));
         this.categoriaPizza.setModel(new DefaultComboBoxModel<>(CategoriaPizza.values()));
         this.tipoPizza.setModel(new DefaultComboBoxModel<>(CategoriaPizza.values()));
-
-        String[] saboresCadastrados = new String[RepositorioDados.listaSabores.size()];
-        String[] statusPedido = new String[]{"Aberto", "A caminho", "Entregue"};
-
-//        for (int i = 0; i < RepositorioDados.listaSabores.size(); i++) {
-//            Sabor saborCadastrado = RepositorioDados.listaSabores.get(i);
-//            saboresCadastrados[i] = saborCadastrado.getSabor();
-//        }
 
         List<Sabor> sabores = modelSaborDao.getSabores();
         DefaultComboBoxModel<String> comboBoxModel = new DefaultComboBoxModel<>();
@@ -186,18 +143,8 @@ public class Pizzaria extends javax.swing.JFrame {
         
         this.sabor1.setModel(comboBoxModel);
         
-        
-//        List<Sabor> sabores1 = modelSaborDao.getSabores(); 
-//        DefaultComboBoxModel<String> comboBoxModel1 = new DefaultComboBoxModel<>();
-//        this.sabor1.setModel(comboBoxModel1);
-
-        String saborSelecionado = sabor1.getSelectedItem().toString();
-//
         List<Sabor> sabores2 = modelSaborDao.getSabores(); 
-//        if (saborSelecionado != null) {
-//            sabores2.remove(saborSelecionado); 
-//        }
-        
+
         
         DefaultComboBoxModel<String> comboBoxModel2 = new DefaultComboBoxModel<>();
         for (Sabor sabor : sabores2) {
@@ -224,6 +171,7 @@ public class Pizzaria extends javax.swing.JFrame {
         this.sabor1.setEnabled(false);
         this.sabor2.setEnabled(false);
         this.realizarPedido.setEnabled(false);
+        this.clienteNaoEncontradoLabel.setVisible(false);
 
     }
 
@@ -289,6 +237,7 @@ public class Pizzaria extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         removerPizza = new javax.swing.JButton();
         validarArea = new javax.swing.JButton();
+        clienteNaoEncontradoLabel = new javax.swing.JLabel();
         Precos = new javax.swing.JPanel();
         tipoPizza = new javax.swing.JComboBox<>();
         valorPizza = new javax.swing.JTextField();
@@ -626,6 +575,9 @@ public class Pizzaria extends javax.swing.JFrame {
             }
         });
 
+        clienteNaoEncontradoLabel.setForeground(java.awt.Color.red);
+        clienteNaoEncontradoLabel.setText("Cliente não encontrado");
+
         javax.swing.GroupLayout RealizarPedidoLayout = new javax.swing.GroupLayout(RealizarPedido);
         RealizarPedido.setLayout(RealizarPedidoLayout);
         RealizarPedidoLayout.setHorizontalGroup(
@@ -697,7 +649,8 @@ public class Pizzaria extends javax.swing.JFrame {
                         .addGap(37, 37, 37)
                         .addGroup(RealizarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(clienteFiltrado)
-                            .addComponent(telefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(telefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(clienteNaoEncontradoLabel))
                         .addGap(38, 38, 38)
                         .addComponent(procurarCliente)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -711,14 +664,16 @@ public class Pizzaria extends javax.swing.JFrame {
                     .addComponent(procurarClienteLabel)
                     .addComponent(telefoneCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(procurarCliente))
-                .addGap(18, 18, 18)
+                .addGap(1, 1, 1)
+                .addComponent(clienteNaoEncontradoLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(RealizarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(clienteFiltrado)
                     .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(RealizarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(RealizarPedidoLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(RealizarPedidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(opcaoArea)
@@ -1020,21 +975,6 @@ public class Pizzaria extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buscarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarPedidoActionPerformed
-        // TODO add your handling code here:
-//        try {
-//            if (filtrarPedido.getText().isEmpty()) {
-//                throw new IllegalArgumentException("Número do pedido vazio. Por favor, digite um número válido.");
-//            }
-//            int numeroPedido = Integer.parseInt(filtrarPedido.getText());
-//            todosPedidosTableModel.filtraPedidos(numeroPedido);
-//        } catch (NumberFormatException e) {
-//            JOptionPane.showMessageDialog(null, "O número do pedido é inválido. Por favor, digite um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        } catch (IllegalArgumentException e) {
-//            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao filtrar os pedidos.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        }
-
 
     }//GEN-LAST:event_buscarPedidoActionPerformed
 
@@ -1043,25 +983,7 @@ public class Pizzaria extends javax.swing.JFrame {
     }//GEN-LAST:event_filtrarPedidoActionPerformed
 
     private void criarSaborActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criarSaborActionPerformed
-        // TODO add your handling code here:
 
-//        String novoSabor = this.nomeSabor.getText();
-//        String tipoNovoSabor = this.tipo.getSelectedItem().toString();
-//
-//        Sabor sabor = new Sabor(novoSabor, tipoNovoSabor);
-//        RepositorioDados.listaSabores.add(sabor);
-//        saborTableModel.adicionaSabor(sabor);
-//
-//        String[] saboresCadastrados = new String[RepositorioDados.listaSabores.size()];
-//
-//        for(int i = 0; i < RepositorioDados.listaSabores.size(); i++) {
-//            Sabor saborCadastrado = RepositorioDados.listaSabores.get(i);
-//            saboresCadastrados[i] = saborCadastrado.getSabor();
-//        }
-//
-//        System.out.println(saboresCadastrados);
-//
-//        this.sabor1.setModel(new DefaultComboBoxModel<>(saboresCadastrados));
     }//GEN-LAST:event_criarSaborActionPerformed
 
     private void categoriaPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoriaPizzaActionPerformed
@@ -1069,19 +991,6 @@ public class Pizzaria extends javax.swing.JFrame {
     }//GEN-LAST:event_categoriaPizzaActionPerformed
 
     private void atualizarValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarValorActionPerformed
-        // TODO add your handling code here:
-//        try {
-//            double atualizarValorPizza = Double.parseDouble(this.valorPizza.getText());
-//            String tipoPizzaSelecionada = this.tipoPizza.getSelectedItem().toString();
-//
-//            preco = new Pizza(tipoPizzaSelecionada, atualizarValorPizza);
-//
-//            precoTableModel.atualizarPreco(tipoPizzaSelecionada, atualizarValorPizza);
-//        } catch (NumberFormatException e) {
-//            JOptionPane.showMessageDialog(null, "O valor da pizza é inválido.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao atualizar o preço da pizza.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        }
 
     }//GEN-LAST:event_atualizarValorActionPerformed
 
@@ -1099,12 +1008,10 @@ public class Pizzaria extends javax.swing.JFrame {
         try {
             List<Pizza> listaExcluir = getPizzasParaExcluirDaTabela();
 
-            RepositorioDados.pizzasPedido.removeAll(listaExcluir);
             this.listaPizzas.removerPizzas(listaExcluir);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro ao excluir as pizzas.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
     }//GEN-LAST:event_removerPizzaActionPerformed
 
     private void calcularAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_calcularAreaActionPerformed
@@ -1144,97 +1051,14 @@ public class Pizzaria extends javax.swing.JFrame {
             this.doisSabores.setEnabled(false);
             JOptionPane.showMessageDialog(null, "Medida inválida. Informe um número válido.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
-
     }//GEN-LAST:event_calcularAreaActionPerformed
 
     private void realizarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_realizarPedidoActionPerformed
         // TODO add your handling code here:
-//        try {
-//            String telefoneFiltro = this.telefoneCliente.getText();
-//            int id = 0;
-//
-//            List<Pedido> listaPedido = new ArrayList<>();
-//            List<Pizza> excluirPizzas = new ArrayList<>();
-//            Cliente cliente = clienteTableModel.filtraCliente(telefoneFiltro, clienteTableModel);
-//
-//            this.pedidosClienteTableModel.filtraPedidos(telefoneFiltro, "Aberto");
-//
-//            List<Pedido> pedidosAbertos = this.pedidosClienteTableModel.getPedidosAbertos();
-//
-//            if (pedidosAbertos.size() > 0) {
-//                for (Pedido pedidoAberto : pedidosAbertos) {
-//                    id = pedidoAberto.getId();
-//                }
-//            } else {
-//                id = gerarID();
-//            }
-//
-//            for (int i = 0; i < RepositorioDados.pizzasPedido.size(); i++) {
-//                Pizza pizza = RepositorioDados.pizzasPedido.get(i);
-//                Pedido pedido = new Pedido(pizza, cliente, id, "Aberto", totalPedido);
-//                listaPedido.add(pedido);
-//                excluirPizzas.add(pizza);
-//            }
-//
-//            if (!listaPedido.isEmpty()) {
-//                this.pedidosClienteTableModel.adicionaPedido(listaPedido);
-//                RepositorioDados.listaPedidos.addAll(listaPedido);
-//                listaPizzas.removerPizzas(RepositorioDados.pizzasPedido);
-//                RepositorioDados.pizzasPedido.removeAll(excluirPizzas);
-//                todosPedidosTableModel.populaTabela();
-//            } else {
-//                JOptionPane.showMessageDialog(null, "A lista de pedidos está vazia.", "Erro", JOptionPane.ERROR_MESSAGE);
-//            }
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao adicionar os pedidos.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        }
-//        this.realizarPedido.setEnabled(false);
-//        this.valorTotal.setText("Total: R$ 0,00");
-//        this.totalPedido = 0;
     }//GEN-LAST:event_realizarPedidoActionPerformed
 
     private void adicionarPizzaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarPizzaActionPerformed
         // TODO add your handling code here:
-//        String sabor1 = this.sabor1.getSelectedItem().toString();
-//        String sabor2 = this.sabor2.getSelectedItem().toString();
-//
-//        String tipo1 = saborTableModel.getTipoBySabor(sabor1);
-//        String tipo2 = "";
-//
-//        double valor1 = precoTableModel.getPrecoByTipo(tipo1) * Double.parseDouble(this.areaPizzaInformada.getText());
-//        double valor2 = 0.0;
-//
-//        if (!sabor2.isEmpty()) {
-//            tipo2 = saborTableModel.getTipoBySabor(sabor2);
-//            valor2 = precoTableModel.getPrecoByTipo(tipo2) * Double.parseDouble(this.areaPizzaInformada.getText());
-//        }
-//
-//        double mediaValor = (valor1 != valor2) ? (valor1 + valor2) / 2 : valor1;
-//
-//        Pizza pizza;
-//
-//        if (this.umSabor.isSelected()) {
-//            pizza = new Pizza(this.forma.formato(), sabor1, valor1);
-//        } else if (this.doisSabores.isSelected()) {
-//            pizza = new Pizza(this.forma.formato(), sabor1, sabor2, mediaValor);
-//        } else {
-//            pizza = new Pizza("", "", 0.0);
-//        }
-//
-//        listaPizzas.adicionaSabor(pizza);
-//        RepositorioDados.pizzasPedido.add(pizza);
-//        this.realizarPedido.setEnabled((true));
-//
-//        double total = 0;
-//
-//        for (Pizza precoPizza : RepositorioDados.pizzasPedido) {
-//            total += precoPizza.getPreco();
-//        }
-//
-//        this.totalPedido = total;
-//
-//        this.valorTotal.setText("Total: R$" + String.valueOf(totalPedido));
 
     }//GEN-LAST:event_adicionarPizzaActionPerformed
 
@@ -1274,44 +1098,6 @@ public class Pizzaria extends javax.swing.JFrame {
 
     private void procurarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_procurarClienteActionPerformed
         // TODO add your handling code here:
-//        String telefoneFiltro = this.telefoneCliente.getText();
-//
-//        try {
-//            if (telefoneFiltro.isEmpty()) {
-//                throw new IllegalArgumentException("Telefone vazio. Por favor, digite um telefone válido.");
-//            }
-//
-//            Cliente c = clienteTableModel.filtraCliente(telefoneFiltro, clienteTableModel);
-//            clienteFiltrado.setText(c.getNome() + " " + c.getSobrenome());
-//
-//            this.pedidosClienteTableModel.filtraPedidos(telefoneFiltro, "Aberto");
-//
-//            this.jtPizzasPedidoAndamento.removeAll();
-//            this.areaPizzaInformada.setText("");
-//            this.opcaoQuadrado.setEnabled(false);
-//            this.opcaoCircular.setEnabled(false);
-//            this.opcaoTriangular.setEnabled(false);
-//            this.calcularArea.setEnabled(false);
-//            this.umSabor.setEnabled(false);
-//            this.doisSabores.setEnabled(false);
-//            this.sabor1.setEnabled(false);
-//            this.sabor2.setEnabled(false);
-//            this.adicionarPizza.setEnabled(false);
-//            this.removerPizza.setEnabled(false);
-//            this.opcaoArea.setSelected(false);
-//            this.opcaoFormato.setSelected(false);
-//
-//            this.opcaoArea.setEnabled(true);
-//            this.opcaoFormato.setEnabled(true);
-//
-//        } catch (IllegalArgumentException e) {
-//            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-//            clienteFiltrado.setText("");
-//        } catch (Exception ex) {
-//            JOptionPane.showMessageDialog(null, "Telefone não encontrado na lista de clientes. \n", "Erro", JOptionPane.ERROR_MESSAGE);
-//            clienteFiltrado.setText("");
-//        }
-
     }//GEN-LAST:event_procurarClienteActionPerformed
 
     private void telefoneClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telefoneClienteActionPerformed
@@ -1319,73 +1105,15 @@ public class Pizzaria extends javax.swing.JFrame {
     }//GEN-LAST:event_telefoneClienteActionPerformed
 
     private void excluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_excluirActionPerformed
-//        // TODO add your handling code here:
-//        List<Cliente> listaExcluir = getClientesParaExcluirDaTabela();
-//        this.clienteTableModel.removeClientes(listaExcluir);
-//        
-//        for(Pedido pedido1 : RepositorioDados.listaPedidos) {
-//            System.out.println(pedido1.getCliente().getTelefone() + " oiii " + telefoneCliente.getText());
-//        }
-//        
-//        this.todosPedidosTableModel.excluiPedidos(telefoneCliente.getText());
-//        
-//        this.jtPizzasPedidoAndamento.removeAll();
-//        this.areaPizzaInformada.setText("");
-//        this.opcaoQuadrado.setEnabled(false);
-//        this.opcaoCircular.setEnabled(false);
-//        this.opcaoTriangular.setEnabled(false);
-//        this.calcularArea.setEnabled(false);
-//        this.umSabor.setEnabled(false);
-//        this.doisSabores.setEnabled(false);
-//        this.sabor1.setEnabled(false);
-//        this.sabor2.setEnabled(false);
-//        this.adicionarPizza.setEnabled(false);
-//        this.removerPizza.setEnabled(false);
-//        this.opcaoArea.setSelected(false);
-//        this.opcaoFormato.setSelected(false);
-//        this.areaPizzaInformada.setEnabled(false);
-//        this.validarArea.setEnabled(false);
-//        
-//        this.pedidosClienteTableModel.limpaTabela();
-
-
+        // TODO add your handling code here:
     }//GEN-LAST:event_excluirActionPerformed
 
     private void editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editarActionPerformed
-        // TODO add your handling code here:
-
-//        String nome = this.nome.getText();
-//        String sobrenome = this.sobrenome.getText();
-//        String telefone = this.telefone.getText();
-//        
-//        boolean telefoneExistente = false;
-//        
-//        if(!editarCliente.getTelefone().equals(telefone)) {
-//            for (Cliente cliente : RepositorioDados.listaClientes) {
-//                if(cliente.getTelefone().equals(telefone)) {
-//                    telefoneExistente = true;
-//                    break;
-//                }
-//            }
-//        }
-//        
-//        if (!telefoneExistente) {
-//                editarCliente.setNome(nome);
-//                editarCliente.setSobrenome(sobrenome);
-//                editarCliente.setTelefone(telefone);
-//                this.mensagemErroTelefone.setVisible(false);
-//
-//        } else {
-//            this.mensagemErroTelefone.setVisible(true);
-//        }
-//        
-//        clienteTableModel.fireTableRowsUpdated(atualizarLinhaSelecionada, atualizarLinhaSelecionada);
-
     }//GEN-LAST:event_editarActionPerformed
 
     private void jtClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtClientesMouseClicked
         // TODO add your handling code here:
-        this.linhaSelecionadaEditarCliente = jtClientes.rowAtPoint(evt.getPoint());
+        this.linhaSelecionadaEditarCliente = jtClientes.rowAtPoint(evt.getPoint());;
         this.editarCliente = this.clienteTableModel.getCliente(this.linhaSelecionadaEditarCliente);
 
         this.setCliente(editarCliente);
@@ -1393,18 +1121,10 @@ public class Pizzaria extends javax.swing.JFrame {
 
     private void atualizarStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_atualizarStatusActionPerformed
         // TODO add your handling code here:
-//        int numeroPedido = Integer.parseInt(filtrarPedido.getText());
-//        StatusPedido status = (StatusPedido) this.opcoesStatus.getSelectedItem();
-//        this.todosPedidosTableModel.atualizarStatus(numeroPedido, status);
-//
-//        String telefoneFiltro = telefoneCliente.getText();
-//
-//        this.pedidosClienteTableModel.filtraPedidos(telefoneFiltro, "Aberto");
     }//GEN-LAST:event_atualizarStatusActionPerformed
 
     private void mostrarTodosPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosPedidosActionPerformed
         // TODO add your handling code here:
-//        this.todosPedidosTableModel.mostrarTodosPedidos(RepositorioDados.listaPedidos);
     }//GEN-LAST:event_mostrarTodosPedidosActionPerformed
 
     private void opcaoQuadradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_opcaoQuadradoActionPerformed
@@ -1477,24 +1197,14 @@ public class Pizzaria extends javax.swing.JFrame {
         this.umSabor.setEnabled(true);
         this.doisSabores.setEnabled(true);
 
-
     }//GEN-LAST:event_validarAreaActionPerformed
 
     private void filtrarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filtrarClienteActionPerformed
         // TODO add your handling code here:
-//        String sobrenomeFiltro = this.sobrenome.getText();
-//        String telefoneFiltro = this.telefone.getText();
-//        
-//        
-//        this.clienteTableModel.filtraListaCliente(telefoneFiltro, sobrenomeFiltro);
-
     }//GEN-LAST:event_filtrarClienteActionPerformed
 
     private void mostrarTodosClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosClientesActionPerformed
         // TODO add your handling code here:
-//        
-//        this.clienteTableModel.setListaCliente(RepositorioDados.listaClientes);
-
     }//GEN-LAST:event_mostrarTodosClientesActionPerformed
 
     private void cadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastrarActionPerformed
@@ -1520,7 +1230,6 @@ public class Pizzaria extends javax.swing.JFrame {
         this.excluir.addActionListener(e -> controller.excluirCliente());
         this.mostrarTodosClientes.addActionListener(e -> controller.listarTodosClientes());
         this.filtrarCliente.addActionListener(e -> controller.filtraCliente());
-//        this.botaoListar.addActionListener(e -> controller.listarContato());
 
     }
 
@@ -1547,6 +1256,8 @@ public class Pizzaria extends javax.swing.JFrame {
                 Logger.getLogger(Pizzaria.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        this.mostrarTodosPedidos.addActionListener(e -> controller.mostraTodosPedidos());
     }
 
     public void setSaborController(SaborController controller) {
@@ -1606,7 +1317,6 @@ public class Pizzaria extends javax.swing.JFrame {
         for (int row = 0; row < listaPizzas.getRowCount(); row++) {
             Object valorPizza = listaPizzas.getValueAt(row, columnIndex);
             System.out.println( valorPizza + "valorTotal");
-            // Converta o valor da célula em um número, por exemplo, double
             if (valorPizza instanceof Number) {
                 double valorDouble = ((Number) valorPizza).doubleValue();
                 total += valorDouble;
@@ -1632,62 +1342,20 @@ public class Pizzaria extends javax.swing.JFrame {
     public void inserirPedidoTabela(List<Pedido> pedido){
         this.pedidosClienteTableModel.adicionaPedido(pedido);
         this.todosPedidosTableModel.adicionaPedido(pedido);
-//        this.listaPizzas.removerPizzas(listaParaExcluir);
+        
+    }
+    
+    public void mostraTodosPedidos(List<Pedido> pedidos) {
+        this.todosPedidosTableModel.setListaTodosPedidos(pedidos);
     }
     
     public List<Pedido> getPizzasPedido() {
-//        try {;
-//            String telefoneFiltro = this.telefoneCliente.getText();
-//            int id = 0;
-//
-//            List<Pedido> listaPedido = new ArrayList<>();
-//            List<Pizza> excluirPizzas = new ArrayList<>();
-//            Cliente cliente = clienteTableModel.filtraCliente(telefoneFiltro, clienteTableModel);
-//
-//            this.pedidosClienteTableModel.filtraPedidos(telefoneFiltro, "Aberto");
-//
-//            List<Pedido> pedidosAbertos = this.pedidosClienteTableModel.getPedidosAbertos();
-//
-//            if (pedidosAbertos.size() > 0) {
-//                for (Pedido pedidoAberto : pedidosAbertos) {
-//                    id = pedidoAberto.getId();
-//                }
-//            } else {
-//                id = gerarID();
-//            }
-//
-//            for (int i = 0; i < RepositorioDados.pizzasPedido.size(); i++) {
-//                Pizza pizza = RepositorioDados.pizzasPedido.get(i);
-//                Pedido pedido = new Pedido(pizza, cliente, id, "Aberto", totalPedido);
-//                listaPedido.add(pedido);
-//                excluirPizzas.add(pizza);
-//            }
-//RepositorioDados.listaPedidos
-//
-//            if (!listaPedido.isEmpty()) {
-//                this.pedidosClienteTableModel.adicionaPedido(listaPedido);
-//                RepositorioDados.listaPedidos.addAll(listaPedido);
-//                listaPizzas.removerPizzas(RepositorioDados.pizzasPedido);
-//                RepositorioDados.pizzasPedido.removeAll(excluirPizzas);
-//                todosPedidosTableModel.populaTabela();
-//            } else {
-//                JOptionPane.showMessageDialog(null, "A lista de pedidos está vazia.", "Erro", JOptionPane.ERROR_MESSAGE);
-//            }
-//            
-//            return listaPedido;
-//            
-//        } catch (Exception e) {
-//            JOptionPane.showMessageDialog(null, "Ocorreu um erro ao adicionar os pedidos.", "Erro", JOptionPane.ERROR_MESSAGE);
-//        }
-//        this.realizarPedido.setEnabled(false);
-//        this.valorTotal.setText("Total: R$ 0,00");
-//        this.totalPedido = 0;
 
         List<Pedido> listaPedido = new ArrayList<>();
-        List<Pedido> pedidosAbertos = this.pedidosClienteTableModel.getPedidosAbertos();
-//        
+        List<Pedido> pedidosAbertos = this.pedidosClienteTableModel.getPedidosAbertos();       
+        
         int numeroPedido = 0;
-//        
+        
         if (pedidosAbertos.size() > 0) {
             for (Pedido pedidoAberto : pedidosAbertos) {
                 numeroPedido = pedidoAberto.getId();
@@ -1719,27 +1387,16 @@ public class Pizzaria extends javax.swing.JFrame {
     }
     
 
-    public boolean telefoneExistente(String telefone) {
-
-        boolean telefoneExistente;
-
-        telefoneExistente = RepositorioDados.listaClientes.stream().anyMatch(cliente -> cliente.getTelefone().equals(telefone));
-
-        if (telefoneExistente) {
-            this.mensagemErroTelefone.setVisible(true);
-            return true;
-        } else {
-            this.mensagemErroTelefone.setVisible(false);
-            return false;
-        }
-    }
-
     public void limparClienteAtualizar() {
         editarCliente = null;
     }
 
     public void mostraListaClientes(List<Cliente> lista) {
         this.clienteTableModel.setListaCliente(lista);
+    }
+    
+    public void excluiPedidosClienteTabela() {
+        this.todosPedidosTableModel.excluiPedidos(telefoneCliente.getText());
     }
     
     public void mostraListaPedidosFiltrado(List<Pedido> lista) {
@@ -1751,7 +1408,6 @@ public class Pizzaria extends javax.swing.JFrame {
         String sobrenome = this.sobrenome.getText();
         String telefone = this.telefone.getText();
 
-        //this.clienteTableModel.filtraListaCliente(telefoneFiltro, sobrenomeFiltro, nomeFiltro);
         Cliente c = new Cliente(nome, sobrenome, telefone);
 
         return c;
@@ -1771,13 +1427,12 @@ public class Pizzaria extends javax.swing.JFrame {
         String telefone = this.telefone.getText();
 
         boolean isTelefoneValido = telefone.matches(regexTelefone);
+        
 
         if (!nome.isEmpty() && !sobrenome.isEmpty() && !telefone.isEmpty()) {
             if (isTelefoneValido) {
 
                 Cliente c = new Cliente(nome, sobrenome, telefone);
-
-                RepositorioDados.listaClientes.add(c);
 
                 return c;
             } else {
@@ -1794,6 +1449,15 @@ public class Pizzaria extends javax.swing.JFrame {
             return null;
         }
 
+    }
+    
+    public void mostraMensagemTelefoneExistente() {
+        this.mensagemErroTelefone.setText("Telefone ja cadastrado.");
+        this.mensagemErroTelefone.setVisible(true);
+    }
+    
+    public void mostraMensagemClienteNaoEncontrado() {
+        this.clienteNaoEncontradoLabel.setVisible(true);
     }
 
     public Cliente getClienteParaAtualizar() {
@@ -1848,26 +1512,7 @@ public class Pizzaria extends javax.swing.JFrame {
         List<Cliente> listaExcluir = getClientesParaExcluir();
         this.clienteTableModel.removeClientes(listaExcluir);
 
-//        this.todosPedidosTableModel.excluiPedidos(telefoneCliente.getText());
-        //deve excluir todos os pedidos do cliente ao exclui-lo
-//        this.jtPizzasPedidoAndamento.removeAll();
-//        this.areaPizzaInformada.setText("");
-//        this.opcaoQuadrado.setEnabled(false);
-//        this.opcaoCircular.setEnabled(false);
-//        this.opcaoTriangular.setEnabled(false);
-//        this.calcularArea.setEnabled(false);
-//        this.umSabor.setEnabled(false);
-//        this.doisSabores.setEnabled(false);
-//        this.sabor1.setEnabled(false);
-//        this.sabor2.setEnabled(false);
-//        this.adicionarPizza.setEnabled(false);
-//        this.removerPizza.setEnabled(false);
-//        this.opcaoArea.setSelected(false);
-//        this.opcaoFormato.setSelected(false);
-//        this.areaPizzaInformada.setEnabled(false);
-//        this.validarArea.setEnabled(false);
-//        
-//        this.pedidosClienteTableModel.limpaTabela();
+        this.todosPedidosTableModel.excluiPedidos(telefoneCliente.getText());
     }
     
     public String getTelefoneCliente() {
@@ -1917,6 +1562,11 @@ public class Pizzaria extends javax.swing.JFrame {
     
     public void limpaTabelaPedidoCliente(){
         this.pedidosClienteTableModel.limpaTabela();
+        this.clienteNaoEncontradoLabel.setVisible(false);
+    }
+    
+    public void limpaTabelaPizzasPedido() {
+        this.listaPizzas.limpaTabela();
     }
 
     public Preco getPreco() {
@@ -1957,6 +1607,7 @@ public class Pizzaria extends javax.swing.JFrame {
     private javax.swing.JButton calcularArea;
     private javax.swing.JComboBox<CategoriaPizza> categoriaPizza;
     private javax.swing.JLabel clienteFiltrado;
+    private javax.swing.JLabel clienteNaoEncontradoLabel;
     private javax.swing.JButton criarSabor;
     private javax.swing.JRadioButton doisSabores;
     private javax.swing.JButton editar;

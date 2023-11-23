@@ -10,6 +10,6 @@ package model.forma;
  */
 public enum CategoriaPizza {
     
-    Simples, Especial, Premium
+    SIMPLES, ESPECIAL, PREMIUM
     
 }

@@ -16,7 +16,6 @@ import model.pedido.dao.TodosPedidosDao;
 import model.pizza.Pizza;
 import model.preco.dao.PrecoDao;
 import model.sabor.dao.SaborDao;
-import repositorio.RepositorioDados;
 import view.Pizzaria;
 
 /**
@@ -50,15 +49,20 @@ public class PedidosClienteController {
         
         Cliente cliente = view.getClientePedido();
         
-        List<Pedido> pedidosAbertos = modelTodosPedidosDao.getPedidosCliente(cliente);
-        
-        if(pedidosAbertos.isEmpty()) {
-            view.limpaTabelaPedidoCliente();
-        } else {
-            view.inserirPedidoTabela(pedidosAbertos);
+        try {
+            List<Pedido> pedidosAbertos = modelTodosPedidosDao.getPedidosCliente(cliente);
+            
+            if(pedidosAbertos.isEmpty()) {
+                view.limpaTabelaPedidoCliente();
+            } else {
+                view.inserirPedidoTabela(pedidosAbertos);
+            }
+
+            view.setClientePedido();
+        } catch (Exception ex) {
+            view.mostraMensagemClienteNaoEncontrado();
         }
         
-        view.setClientePedido();
     }
     
     public void adicionaPizzaPedido() {
@@ -122,6 +126,7 @@ public class PedidosClienteController {
         pedidosClienteDao.inserir(pizzasPedido, cliente);
         modelTodosPedidosDao.inserir(pizzasPedido);
         view.inserirPedidoTabela(pizzasPedido);
+        view.limpaTabelaPizzasPedido();
         
     }
     

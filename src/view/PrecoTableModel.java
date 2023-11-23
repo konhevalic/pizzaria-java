@@ -10,7 +10,6 @@ import javax.swing.table.AbstractTableModel;
 import model.pizza.Pizza;
 import model.preco.Preco;
 import model.sabor.Sabor;
-import repositorio.RepositorioDados;
 
 /**
  *
@@ -59,14 +58,6 @@ public class PrecoTableModel extends AbstractTableModel {
     }
     
     public void atualizarPreco() {
-        
-//        for (Preco preco : RepositorioDados.listaPrecos) {
-//            if (preco.getCategoria() == null ? categoria == null : preco.getCategoria().equals(categoria)) {
-//                preco.setPreco(novoPreco);
-//                
-//            }
-//        }
-
         this.fireTableRowsInserted(this.precos.size()-1, this.precos.size()-1);
         this.fireTableDataChanged();
     }

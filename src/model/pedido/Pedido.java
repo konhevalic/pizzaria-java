@@ -21,15 +21,6 @@ public class Pedido {
     private StatusPedido status;
     private String telefoneCliente;
     private int numeroPedido;
-
-    
-//    public Pedido(Pizza pizza, Cliente cliente, int id, StatusPedido status, double precoTotal) {
-//        this.pizza = pizza;
-//        this.cliente = cliente;
-//        this.id = id;
-//        this.status = status;
-//        this.precoTotal = precoTotal;
-//    }
     
     public Pedido(Pizza pizza, String telefoneCliente, int id, StatusPedido status, double precoTotal, int numeroPedido) {
         this.pizza = pizza;

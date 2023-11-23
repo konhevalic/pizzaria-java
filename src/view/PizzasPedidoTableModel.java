@@ -83,6 +83,14 @@ public class PizzasPedidoTableModel extends AbstractTableModel {
             default -> null;
         };
     }
+    
+    public void limpaTabela() {
+        int indice = pizzas.size()-1;
+        if(indice<0)
+            indice=0;
+        this.pizzas = new ArrayList();
+        this.fireTableRowsDeleted(0,indice);//update JTable
+    }
 
     
 }

@@ -36,7 +36,6 @@ public class PedidosClienteDao {
              PreparedStatement stmtAdiciona = connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)
         ) {
             for (Pedido pedido : pedidos) {
-                // Sete os valores
                 stmtAdiciona.setString(1, pedido.getSabor1());
                 stmtAdiciona.setString(2, pedido.getSabor2());
                 stmtAdiciona.setString(3, pedido.getForma());
@@ -45,7 +44,6 @@ public class PedidosClienteDao {
                 stmtAdiciona.setString(6, cliente.getTelefone());
                 stmtAdiciona.setInt(7, pedido.getNumeroPedido());
 
-                // Execute a inserção e capture as chaves geradas
                 int affectedRows = stmtAdiciona.executeUpdate();
                 if (affectedRows == 0) {
                     throw new SQLException("A inserção falhou, nenhum registro foi criado.");
@@ -85,7 +83,6 @@ public class PedidosClienteDao {
                     Pizza pizza = new Pizza(formato, sabor1, sabor2, preco);
                     String nomeCliente = cliente.getTelefone();
 
-                    // adicionando o objeto à lista
                     pedidos.add(new Pedido(pizza, nomeCliente, id, StatusPedido.valueOf(status), preco, numeroPedido));
                 }
                 

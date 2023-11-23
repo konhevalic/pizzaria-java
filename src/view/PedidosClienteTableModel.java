@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
 import model.pedido.Pedido;
 import model.pedido.StatusPedido;
 import model.pizza.Pizza;
-import repositorio.RepositorioDados;
 
 /**
  *
@@ -66,12 +65,7 @@ public class PedidosClienteTableModel extends AbstractTableModel {
     public void filtraPedidos(String telefone, StatusPedido status) {
         
         limpaTabela();
-        
-        List<Pedido> pedidosCliente = RepositorioDados.listaPedidos.stream()
-                .filter(pedido -> pedido.getCliente().getTelefone().equals(telefone) && pedido.getStatus().equals(status)).toList();
 
-        setPedidosAbertos(pedidosCliente);
-        this.pedidos.addAll(pedidosCliente);
         this.fireTableRowsInserted(this.pedidos.size()-1, this.pedidos.size()-1);//update JTable
         
     }
